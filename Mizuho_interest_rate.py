@@ -7,7 +7,15 @@ import datetime
 r = requests.get('https://www.mizuhobank.co.jp/rate_fee/rate_interest.html')
 mat = [] 
 soup = BeautifulSoup(r.content, 'html.parser')
-table = soup.select_one('table[summary="外貨普通預金金利・為替相場"]')
+# table = soup.select_one('table[summary="外貨普通預金金利・為替相場"]')
+table = soup.find('table', {'class':'type1 js-market'}).tbody
+#   結果　<tbody>
+#　　　  <tr>
+#        <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
+#        <td class="alnRight" headers="th1 th2"></td>
+#        </tr>
+#        </tbody>
+
 print(table)
 
 # r_list = []
