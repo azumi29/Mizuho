@@ -8,13 +8,30 @@ r = requests.get('https://www.mizuhobank.co.jp/rate_fee/rate_interest.html')
 mat = [] 
 soup = BeautifulSoup(r.content, 'html.parser')
 # table = soup.select_one('table[summary="外貨普通預金金利・為替相場"]')
-table = soup.find('table', {'class':'type1 js-market'}).tbody
-#   結果　<tbody>
-#　　　  <tr>
-#        <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
-#        <td class="alnRight" headers="th1 th2"></td>
-#        </tr>
-#        </tbody>
+table = soup.find('table', {'class':'type1 js-market'})
+        # 結果
+        # <table class="type1 js-market" data-market-id="bk07" summary="外貨普通預金金利・為替相場">
+        # <thead>
+        # <tr>
+        # <th class="alnLeft" style="width: 30%"> </th>
+        # <th class="alnCenter" style="width: 70%">外貨普通預金金利</th>
+        # </tr>
+        # </thead>
+        # <tbody>
+        # <tr>
+        # <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
+        # <td class="alnRight" headers="th1 th2"></td>
+        # </tr>
+        # </tbody>
+        # </table>
+# table = soup.find('table', {'class':'type1 js-market'}).tbody
+        # 結果　
+        # <tbody>
+        # <tr>
+        # <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
+        # <td class="alnRight" headers="th1 th2"></td>
+        # </tr>
+        # </tbody>
 
 print(table)
 
