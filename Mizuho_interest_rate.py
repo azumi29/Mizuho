@@ -1,68 +1,45 @@
-import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from time import sleep
 from bs4 import BeautifulSoup
 import pandas as pd
 import csv
-import datetime	
 
-r = requests.get('https://www.mizuhobank.co.jp/rate_fee/rate_interest.html')
+driver = webdriver.Chrome('C:/WebDriver/bin/chromedriver_win32 (5)/chromedriver.exe')
+target_url = 'https://www.mizuhobank.co.jp/rate_fee/rate_interest.html'
+driver.get(target_url)  
+sleep(10)
+print('動作確認')
+html = driver.page_source
+
 mat = [] 
-soup = BeautifulSoup(r.content, 'html.parser')
-# table = soup.select_one('table[summary="外貨普通預金金利・為替相場"]')
-# table = soup.find('table', {'class':'type1 js-market'})
-        # 結果
-        # <table class="type1 js-market" data-market-id="bk07" summary="外貨普通預金金利・為替相場">
-        # <thead>
-        # <tr>
-        # <th class="alnLeft" style="width: 30%"> </th>
-        # <th class="alnCenter" style="width: 70%">外貨普通預金金利</th>
-        # </tr>
-        # </thead>
-        # <tbody>
-        # <tr>
-        # <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
-        # <td class="alnRight" headers="th1 th2"></td>
-        # </tr>
-        # </tbody>
-        # </table>
-# table = soup.find('table', {'class':'type1 js-market'}).tbody
-        # 結果　
-        # <tbody>
-        # <tr>
-        # <th class="tbgGray02 noBorderL left" headers="th1 th2"></th>
-        # <td class="alnRight" headers="th1 th2"></td>
-        # </tr>
-        # </tbody>
-
+soup = BeautifulSoup(html, 'html.parser')
 table = soup.find('table', {'class':'type1 js-market'}).tbody
-rows = table.find_all('tr')
-for row in rows:
-    print(row.th.text)  # 外貨名
-    print(row.td.text)  # 金利
 
-# r_list = []
-# tbody = table.select('tbody')
-# tbs = tbody.tr.select('th')
+# 外貨名のリスト
+r_list = []
+ths = table.select('th')
+for th in ths: 
+    r_list.append(th.text)  
 
+# 金利のリスト
+url_list = []
+tds = table.select('td')
+for td in tds: 
+    url_list.append(td.text)  
 
-# theadの解析
-# r = []  # 保存先の行
-# thead = table.find('thead')  # theadタグを探す
-# ths = thead.tr.find_all('th')
-# for th in ths:  # thead -> trからthタグを探す
-    # r.append(th.text)  # thタグのテキストを保存
+df_title_url = pd.DataFrame({'Title':r_list, 'URL':url_list})
+print(df_title_url)
 
-# url_list = []
-# for i in elems:
-#     elem_list.append(i.text)
-#     url_list.append(i.attrs['href'])
-
-# df_title_url = pd.DataFrame({'Title':elem_list, 'URL':url_list})
-# print(df_title_url)
-
-# df_title_url.to_csv('Qiita_csv03.csv',encoding='shift jis')
+df_title_url.to_csv('Mizuho_csv.csv',encoding='shift jis')
 
 
 # elems = soup.select('.type1 js-market thead')
+
+# rows = table.find_all('tr')
+# for row in rows:
+#     print(row.th)  # 外貨名
+#     print(row.td)  # 金利
 
 # tableタグを絞り込んでからではなく一気に絞り込もうと思ったら…
 # elems = soup.select('tbody')  
