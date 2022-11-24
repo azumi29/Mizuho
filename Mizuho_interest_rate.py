@@ -33,7 +33,6 @@ print(df_title_url)
 
 df_title_url.to_csv('Mizuho_csv.csv',encoding='shift jis')
 
-
 # elems = soup.select('.type1 js-market thead')
 
 # rows = table.find_all('tr')
